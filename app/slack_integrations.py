@@ -160,6 +160,11 @@ def handle_slack_interaction(payload):
 
     :param payload: The Slack interaction payload (dict)
     """
+    if "actions" not in payload:
+        print("No 'actions' in payload:", payload)
+        return
+
+
     action = payload["actions"][0]["value"]
     response_text = ""
 
