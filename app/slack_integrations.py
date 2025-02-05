@@ -3,7 +3,7 @@ import os
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request
-from app import app, socketio
+# from app import app, socketio
 from .utils import herd_data
 from slack_sdk.errors import SlackApiError
 import random
@@ -12,9 +12,21 @@ import random
 slack_app = App(token=os.environ['SLACK_BOT_TOKEN'])  # Replace with your actual bot token
 handler = SlackRequestHandler(slack_app)
 
+def init_slack():
+    """
+    Initialize the Slack integration with the Flask app context.
+    This function will be called after the app is initialized.
+    """
+    from app import app
+    slack_app.logger.setLevel("INFO")
+
 
 # Send Slack update message with buttons
 def send_slack_update(message):
+    """
+    Send a Slack message with buttons to the #trail-boss channel.
+    """
+    from app import app
     try:
         slack_app.client.chat_postMessage(
             channel='#trail-boss',  # Replace with your channel name
@@ -137,7 +149,7 @@ def handle_request_vet(ack, body, logger):
     socketio.emit('update_herd_data', herd_data)
 
 
-# Slack request handler for events
-@app.route("/slack/actions", methods=["POST"])
-def slack_actions():
-    return handler.handle(request)
+# # Slack request handler for events
+# @app.route("/slack/actions", methods=["POST"])
+# def slack_actions():
+#     return handler.handle(request)
