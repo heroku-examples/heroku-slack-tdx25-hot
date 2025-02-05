@@ -4,6 +4,7 @@ from app.slack_integrations import send_slack_update, handle_slack_interaction
 from slack_bolt.adapter.flask import SlackRequestHandler
 from .utils import herd_data
 
+import json
 import logging
 import random
 
@@ -116,9 +117,9 @@ def slack_actions():
     Handles Slack interactive button actions and triggers appropriate responses.
     """
     try:
-        payload = request.form.get('payload')
+        payload = json.loads(request.form['payload'])
         if payload:
-            payload = request.get_json()
+            # payload = request.get_json()
             logging.info(f"Received payload {payload}")
             handle_slack_interaction(payload)
         return jsonify({"status": "ok"}), 200
