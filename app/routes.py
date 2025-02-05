@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from app import app, slack_app
-from app.slack_integrations import send_slack_update
+from app.slack_integrations import send_slack_update, handle_slack_interaction
+from slack_bolt.adapter.flask import SlackRequestHandler
 from .utils import herd_data
 import random
 
@@ -97,6 +98,26 @@ def send_slack_buttons():
     except Exception as e:
         print(f"Error sending Slack message with buttons: {str(e)}")
     return jsonify({"status": "Buttons sent to Slack"})
+
+
+@app.route('/slack/events', methods=['POST'])
+def slack_events():
+    """
+    Handles Slack event subscriptions (e.g. listening for mentions, commands).
+    """
+    handler = SlackRequestHandler(slack_app)
+    return handler.handle(request)
+
+@app.route('/slack/actions', methods=['POST'])
+def slack_actions():
+    """
+    Handles Slack interactive button actions and triggers appropriate responses.
+    """
+    payload = request.form.get('payload')
+    if payload:
+        payload = request.get_json()
+        handle_slack_interaction(payload)
+    return jsonify({"status": "ok"})
 
 
 # Slack update function

@@ -2,14 +2,14 @@ import os
 
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
-from flask import request
+from flask import request, jsonify
 # from app import app, socketio
 from .utils import herd_data
 from slack_sdk.errors import SlackApiError
 import random
 
 # Initialize Slack app and request handler
-slack_app = App(token=os.environ['SLACK_BOT_TOKEN'])  # Replace with your actual bot token
+slack_app = App(token=os.environ['SLACK_BOT_TOKEN'], signing_secret=os.environ['SLACK_SIGNING_SECRET'])  # Replace with your actual bot token
 handler = SlackRequestHandler(slack_app)
 
 def init_slack():
@@ -100,6 +100,7 @@ def handle_feed_herd(ack, body, logger):
     send_slack_update("Feed stock updated.")
 
     # Emit the data change to the web page
+    from app import socketio
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -115,6 +116,7 @@ def handle_water_herd(ack, body, logger):
     send_slack_update("Water stock updated.")
 
     # Emit the data change to the web page
+    from app import socketio
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -131,6 +133,7 @@ def handle_move_herd(ack, body, logger):
     send_slack_update(f"Herd moved to {new_location}.")
 
     # Emit the data change to the web page
+    from app import socketio
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -146,10 +149,37 @@ def handle_request_vet(ack, body, logger):
     send_slack_update("Vet requested for herd health.")
 
     # Emit the data change to the web page
+    from app import socketio
     socketio.emit('update_herd_data', herd_data)
 
 
-# # Slack request handler for events
-# @app.route("/slack/actions", methods=["POST"])
-# def slack_actions():
-#     return handler.handle(request)
+def handle_slack_interaction(payload):
+    """
+    Processes Slack button interactions and responds with appropriate messages.
+    Ensures the herd management actions are reflected both in Slack and on the web UI.
+
+    :param payload: The Slack interaction payload (dict)
+    """
+    action = payload["actions"][0]["value"]
+    response_text = ""
+
+    # Define action responses
+    if action == "feed_herd":
+        response_text = "The herd has been fed! 🐂"
+    elif action == "water_herd":
+        response_text = "The herd has been given water! 💧"
+    elif action == "move_herd":
+        response_text = "The herd is on the move! 🏇"
+    elif action == "vet_visit":
+        response_text = "A vet has been requested for the herd! 🚑"
+
+    # Send response message to Slack
+    slack_app.client.chat_postMessage(
+        channel=payload["channel"]["id"],
+        text=response_text
+    )
+
+    # Sync the web UI by emitting an update through SocketIO
+    from app import socketio  # Lazy import to avoid circular import issues
+    socketio.emit("update_herd_status", {"message": response_text})
+
