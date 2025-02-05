@@ -12,6 +12,69 @@ import random
 slack_app = App(token=os.environ['SLACK_BOT_TOKEN'])  # Replace with your actual bot token
 handler = SlackRequestHandler(slack_app)
 
+
+# Send Slack update message with buttons
+def send_slack_update(message):
+    try:
+        slack_app.client.chat_postMessage(
+            channel='#trail-boss',  # Replace with your channel name
+            text=message,
+            blocks=[  # Using Block Kit for interactive messages
+                {
+                    "type": "section",
+                    "block_id": "herd_status",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"{message}\n\nWhat would you like to do?"
+                    },
+                    "accessory": {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Feed Herd"
+                                },
+                                "action_id": "feed_herd",
+                                "value": "feed_herd"
+                            },
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Water Herd"
+                                },
+                                "action_id": "water_herd",
+                                "value": "water_herd"
+                            },
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Move Herd"
+                                },
+                                "action_id": "move_herd",
+                                "value": "move_herd"
+                            },
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Request Vet"
+                                },
+                                "action_id": "request_vet",
+                                "value": "request_vet"
+                            }
+                        ]
+                    }
+                }
+            ]
+        )
+    except SlackApiError as e:
+        print(f"Error sending message: {e.response['error']}")
+
+
 # Callback for button interactions
 @slack_app.action("feed_herd")
 def handle_feed_herd(ack, body, logger):
@@ -74,53 +137,7 @@ def handle_request_vet(ack, body, logger):
     socketio.emit('update_herd_data', herd_data)
 
 
-# Function to send Slack update with buttons
-def send_slack_update(message):
-    try:
-        slack_app.client.chat_postMessage(
-            channel='#trail-boss',  # Replace with your channel ID or name
-            text=message,
-            attachments=[
-                {
-                    "text": "What would you like to do?",
-                    "fallback": "You are unable to choose an action",
-                    "callback_id": "herd_action_buttons",
-                    "color": "#8B4500",
-                    "attachment_type": "default",
-                    "actions": [
-                        {
-                            "name": "feed_herd",
-                            "text": "Feed Herd",
-                            "type": "button",
-                            "value": "feed_herd"
-                        },
-                        {
-                            "name": "water_herd",
-                            "text": "Water Herd",
-                            "type": "button",
-                            "value": "water_herd"
-                        },
-                        {
-                            "name": "move_herd",
-                            "text": "Move Herd",
-                            "type": "button",
-                            "value": "move_herd"
-                        },
-                        {
-                            "name": "request_vet",
-                            "text": "Request Vet",
-                            "type": "button",
-                            "value": "request_vet"
-                        }
-                    ]
-                }
-            ]
-        )
-    except SlackApiError as e:
-        print(f"Error sending message: {e.response['error']}")
-
-
 # Slack request handler for events
-@app.route("/slack/events", methods=["POST"])
-def slack_events():
+@app.route("/slack/actions", methods=["POST"])
+def slack_actions():
     return handler.handle(request)

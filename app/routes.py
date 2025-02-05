@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request
 from app import app, slack_app
+from app.slack_integrations import send_slack_update
 from .utils import herd_data
 import random
 
@@ -15,6 +16,8 @@ from app.slack_integrations import handler
 
 @app.route('/')
 def index():
+    send_slack_buttons()
+    send_slack_update("Trail boss management is active. Please select an action:")
     return render_template('index.html', herd=herd_data)
 
 # Update feed route (sync with Slack)
@@ -102,8 +105,3 @@ def send_slack_update(message):
         channel='#trail-boss',
         text=message
     )
-
-@app.route('/slack/actions', methods=['POST'])
-def slack_actions():
-    slack_payload = request.form
-    return handler.handle(request)
