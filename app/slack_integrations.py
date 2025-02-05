@@ -1,14 +1,16 @@
+import os
+
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request
-from app import app, herd_data, socketio
+from app import app, socketio
+from .utils import herd_data
 from slack_sdk.errors import SlackApiError
 import random
 
 # Initialize Slack app and request handler
-slack_app = App(token="your-slack-bot-token")  # Replace with your actual bot token
+slack_app = App(token=os.environ['SLACK_BOT_TOKEN'])  # Replace with your actual bot token
 handler = SlackRequestHandler(slack_app)
-
 
 # Callback for button interactions
 @slack_app.action("feed_herd")

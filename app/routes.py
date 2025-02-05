@@ -1,16 +1,17 @@
 from flask import render_template, jsonify, request
 from app import app, slack_app
+from .utils import herd_data
 import random
 
 from app.slack_integrations import handler
 
-# In-memory data for demo purposes
-herd_data = {
-    "location": "Pasture A",
-    "health_status": "Good",
-    "feed_percentage": 100,
-    "water_percentage": 100
-}
+# # In-memory data for demo purposes
+# herd_data = {
+#     "location": "Pasture A",
+#     "health_status": "Good",
+#     "feed_percentage": 100,
+#     "water_percentage": 100
+# }
 
 @app.route('/')
 def index():
