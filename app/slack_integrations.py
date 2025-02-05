@@ -3,6 +3,8 @@ import os
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request, jsonify
+
+from .routes import send_slack_buttons
 # from app import app, socketio
 from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
 from slack_sdk.errors import SlackApiError
@@ -183,7 +185,7 @@ def handle_slack_interaction(payload):
         response_text = "A vet has been requested for the herd! 🚑"
 
     # Send response message to Slack
-    send_slack_update("")
+    send_slack_buttons()
     slack_app.client.chat_postMessage(
         channel=payload["channel"]["id"],
         text=response_text
