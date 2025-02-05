@@ -72,12 +72,47 @@ def handle_request_vet(ack, body, logger):
     socketio.emit('update_herd_data', herd_data)
 
 
-# Function to send updates to Slack
+# Function to send Slack update with buttons
 def send_slack_update(message):
     try:
         slack_app.client.chat_postMessage(
             channel='#trail-boss',  # Replace with your channel ID or name
-            text=message
+            text=message,
+            attachments=[
+                {
+                    "text": "What would you like to do?",
+                    "fallback": "You are unable to choose an action",
+                    "callback_id": "herd_action_buttons",
+                    "color": "#8B4500",
+                    "attachment_type": "default",
+                    "actions": [
+                        {
+                            "name": "feed_herd",
+                            "text": "Feed Herd",
+                            "type": "button",
+                            "value": "feed_herd"
+                        },
+                        {
+                            "name": "water_herd",
+                            "text": "Water Herd",
+                            "type": "button",
+                            "value": "water_herd"
+                        },
+                        {
+                            "name": "move_herd",
+                            "text": "Move Herd",
+                            "type": "button",
+                            "value": "move_herd"
+                        },
+                        {
+                            "name": "request_vet",
+                            "text": "Request Vet",
+                            "type": "button",
+                            "value": "request_vet"
+                        }
+                    ]
+                }
+            ]
         )
     except SlackApiError as e:
         print(f"Error sending message: {e.response['error']}")

@@ -2,6 +2,8 @@ from flask import render_template, jsonify, request
 from app import app, slack_app
 import random
 
+from app.slack_integrations import handler
+
 # In-memory data for demo purposes
 herd_data = {
     "location": "Pasture A",
@@ -99,3 +101,8 @@ def send_slack_update(message):
         channel='#trail-boss',
         text=message
     )
+
+@app.route('/slack/actions', methods=['POST'])
+def slack_actions():
+    slack_payload = request.form
+    return handler.handle(request)
