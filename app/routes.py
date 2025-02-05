@@ -40,7 +40,7 @@ def update_feed():
     data = request.json
     new_feed_percentage = data.get['feed_percentage']
     update_feed_percentage(new_feed_percentage)
-    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}) #, broadcast=True)
+    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
     send_slack_update(f"🐂 The herd's feed supply is now at {new_feed_percentage}%.")
     return jsonify({"status": "updated", "feed_percentage": new_feed_percentage})
 

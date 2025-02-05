@@ -97,7 +97,7 @@ def handle_feed_herd(ack, body, logger):
     herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
 
     # Send a message to Slack and sync data
-    send_slack_update("Feed stock updated.")
+    send_slack_update(f"Feed stock updated and is now at {herd_data['feed_percentage']}%.")
 
     # Emit the data change to the web page
     from app import socketio
