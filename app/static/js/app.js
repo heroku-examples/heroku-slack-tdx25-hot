@@ -29,3 +29,9 @@ function updatePage(data) {
     document.querySelector("p:nth-child(5)").textContent = `Water Percentage: ${data.water_percentage}%`;
 }
 
+const socket = io();
+
+// Listen for feed updates from Slack
+socket.on("update_feed", (data) => {
+    document.getElementById("feed_percentage").innerText = data.feed_percentage + "%";
+});
