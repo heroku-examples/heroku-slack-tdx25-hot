@@ -1,0 +1,5 @@
+flask
+slack-bolt
+gunicorn
+requests
+python-dotenv

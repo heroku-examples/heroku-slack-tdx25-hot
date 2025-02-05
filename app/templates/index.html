@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Boss Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{  url_for('static', filename='favicon.ico') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Trail Boss Dashboard</h1>
+        <p><strong>Location:</strong> {{ herd['location'] }}</p>
+        <p><strong>Health Status:</strong> {{ herd['health_status'] }}</p>
+        <p><strong>Feed Percentage:</strong> {{ herd['feed_percentage'] }}%</p>
+        <p><strong>Water Percentage:</strong> {{ herd['water_percentage'] }}%</p>
+
+        <button id="feedButton">Feed Herd</button>
+        <button id="waterButton">Water Herd</button>
+        <button id="moveButton">Move Herd</button>
+        <button id="vetButton">Request Vet</button>
+    </div>
+</body>
+</html>
