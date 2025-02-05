@@ -3,3 +3,4 @@ slack-bolt
 gunicorn
 requests
 python-dotenv
+flask-socketio

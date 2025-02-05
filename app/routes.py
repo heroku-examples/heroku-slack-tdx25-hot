@@ -1,6 +1,5 @@
 from flask import render_template, jsonify, request
 from app import app, slack_app
-import json
 import random
 
 # In-memory data for demo purposes
@@ -11,7 +10,6 @@ herd_data = {
     "water_percentage": 100
 }
 
-# Home page route
 @app.route('/')
 def index():
     return render_template('index.html', herd=herd_data)
@@ -44,6 +42,56 @@ def request_vet():
     herd_data['health_status'] = "Needs attention"
     send_slack_update("Vet requested for herd health.")
     return jsonify(herd_data)
+
+@app.route('/send_slack_buttons', methods=['POST'])
+def send_slack_buttons():
+    try:
+        slack_app.client.chat_postMessage(
+            channel='#trail-boss',
+            text="Trail Boss, what action would you like to take?",
+            attachments=[
+                {
+                    "text": "Choose an action",
+                    "fallback": "You are unable to choose an action",
+                    "callback_id": "herd_action_buttons",
+                    "color": "#8B4500",
+                    "actions": [
+                        {
+                            "name": "feed_herd",
+                            "text": "Feed Herd",
+                            "type": "button",
+                            "value": "feed_herd",
+                            "action_id": "feed_herd"
+                        },
+                        {
+                            "name": "water_herd",
+                            "text": "Water Herd",
+                            "type": "button",
+                            "value": "water_herd",
+                            "action_id": "water_herd"
+                        },
+                        {
+                            "name": "move_herd",
+                            "text": "Move Herd",
+                            "type": "button",
+                            "value": "move_herd",
+                            "action_id": "move_herd"
+                        },
+                        {
+                            "name": "request_vet",
+                            "text": "Request Vet",
+                            "type": "button",
+                            "value": "request_vet",
+                            "action_id": "request_vet"
+                        }
+                    ]
+                }
+            ]
+        )
+    except Exception as e:
+        print(f"Error sending Slack message with buttons: {str(e)}")
+    return jsonify({"status": "Buttons sent to Slack"})
+
 
 # Slack update function
 def send_slack_update(message):

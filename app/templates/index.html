@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trail Boss Dashboard</title>
+    <title>Trail Boss Herd Management</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="shortcut icon" href="{{  url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+    <script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('update_herd_data', function(data) {
+        document.querySelector("p:nth-child(2)").textContent = `Location: ${data.location}`;
+        document.querySelector("p:nth-child(3)").textContent = `Health Status: ${data.health_status}`;
+        document.querySelector("p:nth-child(4)").textContent = `Feed Percentage: ${data.feed_percentage}%`;
+        document.querySelector("p:nth-child(5)").textContent = `Water Percentage: ${data.water_percentage}%`;
+    });
+</script>
+
 </head>
 <body>
     <div class="container">
-        <h1>Trail Boss Dashboard</h1>
+        <h1>Trail Boss Herd Management</h1>
         <p><strong>Location:</strong> {{ herd['location'] }}</p>
         <p><strong>Health Status:</strong> {{ herd['health_status'] }}</p>
         <p><strong>Feed Percentage:</strong> {{ herd['feed_percentage'] }}%</p>
@@ -20,6 +31,10 @@
         <button id="waterButton">Water Herd</button>
         <button id="moveButton">Move Herd</button>
         <button id="vetButton">Request Vet</button>
+
+        <form id="sendSlackButtonForm" action="/send_slack_buttons" method="POST">
+            <button type="submit" id="sendSlackButton">Send Buttons to Slack</button>
+        </form>
     </div>
 </body>
 </html>

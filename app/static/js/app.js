@@ -28,3 +28,4 @@ function updatePage(data) {
     document.querySelector("p:nth-child(4)").textContent = `Feed Percentage: ${data.feed_percentage}%`;
     document.querySelector("p:nth-child(5)").textContent = `Water Percentage: ${data.water_percentage}%`;
 }
+
