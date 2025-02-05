@@ -1,8 +1,9 @@
 from flask import render_template, jsonify, request
-from app import app, slack_app
+from flask_socketio import emit
+from app import app, slack_app, socketio
 from app.slack_integrations import send_slack_update, handle_slack_interaction
 from slack_bolt.adapter.flask import SlackRequestHandler
-from .utils import herd_data
+from .utils import herd_data, update_feed_percentage, get_current_feed_percentage
 
 import json
 import logging
@@ -30,6 +31,18 @@ def feed_herd():
     herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
     send_slack_update("Feed stock updated.")
     return jsonify(herd_data)
+
+@app.route('/update_feed', methods=['POST'])
+def update_feed():
+    """
+    Updates the feed percentage and syncs it across Slack and the web interface.
+    """
+    data = request.json
+    new_feed_percentage = data.get['feed_percentage']
+    update_feed_percentage(new_feed_percentage)
+    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
+    send_slack_update(f"🐂 The herd's feed supply is now at {new_feed_percentage}%.")
+    return jsonify({"status": "updated", "feed_percentage": new_feed_percentage})
 
 # Update water route (sync with Slack)
 @app.route('/water', methods=['POST'])

@@ -4,7 +4,7 @@ from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request, jsonify
 # from app import app, socketio
-from .utils import herd_data
+from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
 from slack_sdk.errors import SlackApiError
 import random
 
@@ -160,6 +160,7 @@ def handle_slack_interaction(payload):
 
     :param payload: The Slack interaction payload (dict)
     """
+    from app import socketio
     if "actions" not in payload:
         print("No 'actions' in payload:", payload)
         return
@@ -170,7 +171,10 @@ def handle_slack_interaction(payload):
 
     # Define action responses
     if action == "feed_herd":
-        response_text = "The herd has been fed! 🐂"
+        new_feed_percentage = get_current_feed_percentage() - 10
+        update_feed_percentage(new_feed_percentage)
+        socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
+        response_text = f"The herd has been fed! 🐂 The feed level is now at {new_feed_percentage}"
     elif action == "water_herd":
         response_text = "The herd has been given water! 💧"
     elif action == "move_herd":
