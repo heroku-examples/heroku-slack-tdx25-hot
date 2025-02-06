@@ -1,5 +1,3 @@
-from app import socketio
-
 herd_data = {
     "location": "Pasture A",
     "health_status": "Good",
@@ -19,8 +17,3 @@ def update_feed_percentage(amount):
     Updates the current feed percentage and ensures it stays within 0 & 100 %
     """
     herd_data['feed_percentage'] = max(0, min(100, amount))
-
-    # Emit to web clients
-    socketio.emit("update_feed", {"feed_percentage": herd_data['feed_percentage']},
-                  namespace="/",
-                  include_self=True)
