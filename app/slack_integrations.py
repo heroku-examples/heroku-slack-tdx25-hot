@@ -5,6 +5,7 @@ from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request, jsonify
 # from app import app, socketio
 from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
+from routes import send_slack_buttons
 from slack_sdk.errors import SlackApiError
 import random
 
@@ -98,6 +99,7 @@ def handle_feed_herd(ack, body, logger):
 
     # Send a message to Slack and sync data
     send_slack_update("Feed stock updated.")
+    send_slack_buttons()
 
     # Emit the data change to the web page
     from app import socketio
@@ -114,6 +116,7 @@ def handle_water_herd(ack, body, logger):
 
     # Send a message to Slack and sync data
     send_slack_update("Water stock updated.")
+    send_slack_buttons()
 
     # Emit the data change to the web page
     from app import socketio
@@ -131,6 +134,7 @@ def handle_move_herd(ack, body, logger):
 
     # Send a message to Slack and sync data
     send_slack_update(f"Herd moved to {new_location}.")
+    send_slack_buttons()
 
     # Emit the data change to the web page
     from app import socketio
@@ -147,6 +151,7 @@ def handle_request_vet(ack, body, logger):
 
     # Send a message to Slack and sync data
     send_slack_update("Vet requested for herd health.")
+    send_slack_buttons()
 
     # Emit the data change to the web page
     from app import socketio
