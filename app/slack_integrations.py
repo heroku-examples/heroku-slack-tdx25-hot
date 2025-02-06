@@ -4,6 +4,8 @@ from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from flask import request, jsonify
 
+from app import slack_app
+
 from .routes import send_slack_buttons
 from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
 from slack_sdk.errors import SlackApiError
