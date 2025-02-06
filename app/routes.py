@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, request
-from app import app, slack_app, socketio
+from app import slack_app
+from app.__init__ import app
 from app.slack_integrations import send_slack_update, handle_slack_interaction
 from slack_bolt.adapter.flask import SlackRequestHandler
 from .utils import herd_data, update_feed_percentage, get_current_feed_percentage

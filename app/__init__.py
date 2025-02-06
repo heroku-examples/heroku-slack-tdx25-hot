@@ -16,7 +16,7 @@ app.config['SLACK_SIGNING_SECRET'] = os.environ['SLACK_SIGNING_SECRET']
 
 slack_integrations.init_slack()
 
-from app import routes
+from app import routes, slack_integrations
 
 
 if __name__ == '__main__':
