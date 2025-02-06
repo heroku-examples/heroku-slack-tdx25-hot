@@ -35,10 +35,3 @@ const socket = io();
 socket.on("update_feed", (data) => {
     document.getElementById("feed_percentage").innerText = data.feed_percentage + "%";
 });
-
-// Fetch initial herd status when page loads
-fetch("/herd-status")
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("feed_percentage").innerText = data.feed_percentage + "%";
-    })

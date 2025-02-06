@@ -1,9 +1,8 @@
 from flask import render_template, jsonify, request
-from flask_socketio import emit
 from app import app, slack_app, socketio
 from app.slack_integrations import send_slack_update, handle_slack_interaction
 from slack_bolt.adapter.flask import SlackRequestHandler
-from .utils import herd_data, update_feed_percentage, get_herd_data
+from .utils import herd_data, update_feed_percentage, get_current_feed_percentage
 
 import json
 import logging
@@ -40,7 +39,6 @@ def update_feed():
     data = request.json
     new_feed_percentage = data.get['feed_percentage']
     update_feed_percentage(new_feed_percentage)
-    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
     send_slack_update(f"🐂 The herd's feed supply is now at {new_feed_percentage}%.")
     return jsonify({"status": "updated", "feed_percentage": new_feed_percentage})
 
@@ -65,13 +63,6 @@ def request_vet():
     herd_data['health_status'] = "Needs attention"
     send_slack_update("Vet requested for herd health.")
     return jsonify(herd_data)
-
-@app.route('/herd-status', methods=['GET'])
-def get_status():
-    """
-    Returns the current herd status.
-    """
-    return jsonify(get_herd_data())
 
 @app.route('/send_slack_buttons', methods=['POST'])
 def send_slack_buttons():
