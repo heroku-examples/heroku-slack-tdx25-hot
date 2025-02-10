@@ -35,3 +35,10 @@ const socket = io();
 socket.on("update_feed", (data) => {
     document.getElementById("feed_percentage").innerText = data.feed_percentage + "%";
 });
+
+socket.on("update_herd_data", function (data) {
+    document.getElementById("location").innerText = data.location;
+    document.getElementById("health_status").innerText = data.health_status;
+    document.getElementById("feed_percentage").innerText = data.feed_percentage + "%";
+    document.getElementById("water_percentage").innerText = data.water_percentage + "%";
+});

@@ -74,6 +74,7 @@ def request_vet():
 def send_slack_buttons():
 
     message_text = (
+        f"---\n"
         f"*🐂 Herd Status Update:*\n"
         f"> 📍 *Location:* {herd_data['location']}\n"
         f"> ❤️ *Health Status:* {herd_data['health_status']}\n"
@@ -91,24 +92,35 @@ def send_slack_buttons():
             "type": "actions",
             "elements": [
                 {
+                    "name": "feed_herd",
                     "type": "button",
-                    "text": {"type": "plain_text", "text": "🚜 Restock Feed & Water"},
+                    "text": {"type": "plain_text", "text": "Feed Herd"},
                     "style": "primary",
-                    "value": "restock",
-                    "action_id": "restock_feed_water"
+                    "value": "feed_herd",
+                    "action_id": "feed_herd"
                 },
                 {
+                    "name": "water_herd",
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Water Herd"},
+                    "style": "primary",
+                    "value": "water_herd",
+                    "action_id": "water_herd"
+                },
+                {
+                    "name": "move_herd",
                     "type": "button",
                     "text": {"type": "plain_text", "text": "🏇 Move Herd"},
                     "style": "primary",
-                    "value": "move",
+                    "value": "move_herd",
                     "action_id": "move_herd"
                 },
                 {
+                    "name": "feed_herd",
                     "type": "button",
                     "text": {"type": "plain_text", "text": "🩺 Request Vet Visit"},
                     "style": "danger",
-                    "value": "vet",
+                    "value": "request_vet",
                     "action_id": "request_vet"
                 }
             ]
