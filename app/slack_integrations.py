@@ -100,9 +100,6 @@ def handle_feed_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
-    from routes import send_slack_buttons
-    send_slack_buttons()
-
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -119,8 +116,6 @@ def handle_water_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
-    from routes import send_slack_buttons
-    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -138,8 +133,6 @@ def handle_move_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
-    from routes import send_slack_buttons
-    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -156,8 +149,6 @@ def handle_request_vet(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
-    from routes import send_slack_buttons
-    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -172,7 +163,6 @@ def handle_slack_interaction(payload):
     if "actions" not in payload:
         print("No 'actions' in payload:", payload)
         return
-
 
     action = payload["actions"][0]["value"]
     response_text = ""
@@ -189,6 +179,9 @@ def handle_slack_interaction(payload):
         response_text = "The herd is on the move! 🏇"
     elif action == "vet_visit":
         response_text = "A vet has been requested for the herd! 🚑"
+
+    from routes import send_slack_buttons
+    send_slack_buttons()
 
     # Send response message to Slack
     slack_app.client.chat_postMessage(
