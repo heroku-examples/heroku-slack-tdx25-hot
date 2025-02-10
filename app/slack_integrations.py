@@ -180,7 +180,7 @@ def handle_slack_interaction(payload):
     elif action == "vet_visit":
         response_text = "A vet has been requested for the herd! 🚑"
 
-    from routes import send_slack_buttons
+    from .routes import send_slack_buttons
     send_slack_buttons()
 
     # Send response message to Slack
