@@ -95,7 +95,28 @@ def send_slack_buttons():
                         {
                             "name": "move_herd",
                             "text": "Move Herd",
-                            "type": "button",
+                            "type": "static_select",
+                                "placeholder": {
+                                    "type": "plain_text",
+                                    "text": "Select Herd Location"
+                                },
+                                "options": [
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "Main Barn"
+                                    },
+                                    "value": "main_barn"},
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "North Pasture"
+                                    },
+                                        "value": "north_pasture"},
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "South Pasture"
+                                    },
+                                        "value": "south_pasture"},
+                                ],
                             "value": "move_herd",
                             "action_id": "move_herd"
                         },
