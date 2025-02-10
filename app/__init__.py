@@ -13,6 +13,7 @@ socketio = SocketIO(app)
 
 app.config['SLACK_BOT_TOKEN'] = os.environ['SLACK_BOT_TOKEN']
 app.config['SLACK_SIGNING_SECRET'] = os.environ['SLACK_SIGNING_SECRET']
+app.config['SLACK_WEBHOOK_URL'] = os.environ['SLACK_WEBHOOK_URL']
 
 slack_integrations.init_slack()
 
