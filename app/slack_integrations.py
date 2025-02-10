@@ -60,28 +60,11 @@ def send_slack_update(message):
                                 "value": "water_herd"
                             },
                             {
-                                "type": "static_select",
-                                "placeholder": {
+                                "type": "button",
+                                "text": {
                                     "type": "plain_text",
-                                    "text": "Select Herd Location"
+                                    "text": "Move Herd"
                                 },
-                                "options": [
-                                    {"text": {
-                                        "type": "plain_text",
-                                        "text": "Main Barn"
-                                    },
-                                    "value": "main_barn"},
-                                    {"text": {
-                                        "type": "plain_text",
-                                        "text": "North Pasture"
-                                    },
-                                        "value": "north_pasture"},
-                                    {"text": {
-                                        "type": "plain_text",
-                                        "text": "South Pasture"
-                                    },
-                                        "value": "south_pasture"},
-                                ],
                                 "action_id": "move_herd",
                                 "value": "move_herd"
                             },
