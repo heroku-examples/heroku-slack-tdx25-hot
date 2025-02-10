@@ -6,7 +6,8 @@ from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_sdk.errors import SlackApiError
 
 # from app import app, socketio
-from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
+from .utils import herd_data, get_current_feed_percentage, update_feed_percentage, get_current_water_percentage, \
+    update_water_percentage, get_current_pasture_location
 
 # Initialize Slack app and request handler
 slack_app = App(token=os.environ['SLACK_BOT_TOKEN'], signing_secret=os.environ['SLACK_SIGNING_SECRET'])  # Replace with your actual bot token
@@ -174,9 +175,12 @@ def handle_slack_interaction(payload):
         socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}) #, broadcast=True)
         response_text = f"The herd has been fed! 🐂 The feed level is now at {new_feed_percentage}"
     elif action == "water_herd":
-        response_text = "The herd has been given water! 💧"
+        new_water_percentage = get_current_water_percentage() - 10
+        update_water_percentage(new_water_percentage)
+        response_text = f"The herd has been given water! 💧 The water level is now at {new_water_percentage}."
     elif action == "move_herd":
-        response_text = "The herd is on the move! 🏇"
+        new_location = get_current_pasture_location()
+        response_text = f"The herd is on the move! 🏇 The location is now at {new_location}."
     elif action == "vet_visit":
         response_text = "A vet has been requested for the herd! 🚑"
 
