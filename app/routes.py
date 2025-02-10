@@ -128,44 +128,6 @@ def send_slack_buttons():
         slack_app.client.chat_postMessage(
             channel='#trail-boss',
             text=message_text,
-            # attachments=[
-            #     {
-            #         "text": "Choose an action",
-            #         "fallback": "You are unable to choose an action",
-            #         "callback_id": "herd_action_buttons",
-            #         "color": "#8B4500",
-            #         "actions": [
-            #             {
-            #                 "name": "feed_herd",
-            #                 "text": "Feed Herd",
-            #                 "type": "button",
-            #                 "value": "feed_herd",
-            #                 "action_id": "feed_herd"
-            #             },
-            #             {
-            #                 "name": "water_herd",
-            #                 "text": "Water Herd",
-            #                 "type": "button",
-            #                 "value": "water_herd",
-            #                 "action_id": "water_herd"
-            #             },
-            #             {
-            #                 "name": "move_herd",
-            #                 "text": "Move Herd",
-            #                 "type": "button",
-            #                 "value": "move_herd",
-            #                 "action_id": "move_herd"
-            #             },
-            #             {
-            #                 "name": "request_vet",
-            #                 "text": "Request Vet",
-            #                 "type": "button",
-            #                 "value": "request_vet",
-            #                 "action_id": "request_vet"
-            #             }
-            #         ]
-            #     }
-            # ]
             blocks=blocks
         )
     except Exception as e:
@@ -207,3 +169,10 @@ def send_slack_update(message):
         channel='#trail-boss',
         text=message
     )
+
+def sync_updates():
+    """
+    Synchronizes Slack updates with Web UI.
+    """
+    socketio.emit("update_herd_data", herd_data, broadcast=True)
+    send_slack_buttons()
