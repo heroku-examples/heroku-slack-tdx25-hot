@@ -1,5 +1,3 @@
-from app.routes import send_slack_update
-
 herd_data = {
     "location": "Main Barn",
     "health_status": "Good",
