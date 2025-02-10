@@ -72,54 +72,93 @@ def request_vet():
 
 @app.route('/send_slack_buttons', methods=['POST'])
 def send_slack_buttons():
+
+    message_text = (
+        f"*🐂 Herd Status Update:*\n"
+        f"> 📍 *Location:* {herd_data['location']}\n"
+        f"> ❤️ *Health Status:* {herd_data['health_status']}\n"
+        f"> 🌾 *Feed Available:* {herd_data['feed_percentage']}%\n"
+        f"> 🚰 *Water Available:* {herd_data['water_percentage']}%\n\n"
+        f"Choose an action below:"
+    )
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": message_text}
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🚜 Restock Feed & Water"},
+                    "style": "primary",
+                    "value": "restock",
+                    "action_id": "restock_feed_water"
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🏇 Move Herd"},
+                    "style": "primary",
+                    "value": "move",
+                    "action_id": "move_herd"
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🩺 Request Vet Visit"},
+                    "style": "danger",
+                    "value": "vet",
+                    "action_id": "request_vet"
+                }
+            ]
+        }
+    ]
+
+
     try:
         slack_app.client.chat_postMessage(
             channel='#trail-boss',
-            text="Trail Boss, what action would you like to take?/n"
-                 "Current Status:/n"
-                 "Feed Supply: " + herd_data['feed_percentage'] + "%/n"
-                 "Water Supply: " + herd_data['water_percentage'] + "%/n"
-                 "Health Status: " + herd_data['health_status'] + "/n"
-                 "Herd Location: " + herd_data['location'] + "/n",
-
-            attachments=[
-                {
-                    "text": "Choose an action",
-                    "fallback": "You are unable to choose an action",
-                    "callback_id": "herd_action_buttons",
-                    "color": "#8B4500",
-                    "actions": [
-                        {
-                            "name": "feed_herd",
-                            "text": "Feed Herd",
-                            "type": "button",
-                            "value": "feed_herd",
-                            "action_id": "feed_herd"
-                        },
-                        {
-                            "name": "water_herd",
-                            "text": "Water Herd",
-                            "type": "button",
-                            "value": "water_herd",
-                            "action_id": "water_herd"
-                        },
-                        {
-                            "name": "move_herd",
-                            "text": "Move Herd",
-                            "type": "button",
-                            "value": "move_herd",
-                            "action_id": "move_herd"
-                        },
-                        {
-                            "name": "request_vet",
-                            "text": "Request Vet",
-                            "type": "button",
-                            "value": "request_vet",
-                            "action_id": "request_vet"
-                        }
-                    ]
-                }
-            ]
+            text=message_text,
+            # attachments=[
+            #     {
+            #         "text": "Choose an action",
+            #         "fallback": "You are unable to choose an action",
+            #         "callback_id": "herd_action_buttons",
+            #         "color": "#8B4500",
+            #         "actions": [
+            #             {
+            #                 "name": "feed_herd",
+            #                 "text": "Feed Herd",
+            #                 "type": "button",
+            #                 "value": "feed_herd",
+            #                 "action_id": "feed_herd"
+            #             },
+            #             {
+            #                 "name": "water_herd",
+            #                 "text": "Water Herd",
+            #                 "type": "button",
+            #                 "value": "water_herd",
+            #                 "action_id": "water_herd"
+            #             },
+            #             {
+            #                 "name": "move_herd",
+            #                 "text": "Move Herd",
+            #                 "type": "button",
+            #                 "value": "move_herd",
+            #                 "action_id": "move_herd"
+            #             },
+            #             {
+            #                 "name": "request_vet",
+            #                 "text": "Request Vet",
+            #                 "type": "button",
+            #                 "value": "request_vet",
+            #                 "action_id": "request_vet"
+            #             }
+            #         ]
+            #     }
+            # ]
+            blocks=blocks
         )
     except Exception as e:
         print(f"Error sending Slack message with buttons: {str(e)}")
