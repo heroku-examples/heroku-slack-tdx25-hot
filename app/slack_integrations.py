@@ -1,5 +1,6 @@
 import os
 import random
+import requests
 
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -197,3 +198,17 @@ def handle_slack_interaction(payload):
     from app import socketio  # Lazy import to avoid circular import issues
     socketio.emit("update_herd_status", {"message": response_text})
 
+def trigger_feed_reorder():
+    """
+    Triggers a Slack Workflow when feed is low.
+
+    """
+
+
+    payload = {"text": "Feed supply alert. The herd's feed is low, time to reorder."}
+    response = requests.post(os.environ['SLACK_WEBHOOK_URL'], json=payload)
+
+    if response.status_code == 200:
+        send_slack_update(payload)
+    else:
+        send_slack_update(f"Failed to trigger feed reorder: {response.text}")
