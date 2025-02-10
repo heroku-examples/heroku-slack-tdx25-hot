@@ -9,15 +9,6 @@ from app import app, slack_app, socketio
 from app.slack_integrations import send_slack_update, handle_slack_interaction
 from .utils import herd_data, update_feed_percentage
 
-
-# # In-memory data for demo purposes
-# herd_data = {
-#     "location": "Pasture A",
-#     "health_status": "Good",
-#     "feed_percentage": 100,
-#     "water_percentage": 100
-# }
-
 @app.route('/')
 def index():
     send_slack_update("Trail boss management is active. Please select an action:")
