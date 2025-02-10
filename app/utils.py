@@ -1,5 +1,5 @@
 herd_data = {
-    "location": "Pasture A",
+    "location": "Main Barn",
     "health_status": "Good",
     "feed_percentage": 100,
     "water_percentage": 100

@@ -20,8 +20,8 @@ from .utils import herd_data, update_feed_percentage
 
 @app.route('/')
 def index():
-    send_slack_buttons()
     send_slack_update("Trail boss management is active. Please select an action:")
+    send_slack_buttons()
     return render_template('index.html', herd=herd_data)
 
 # Update feed route (sync with Slack)
@@ -29,6 +29,7 @@ def index():
 def feed_herd():
     herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
     send_slack_update("Feed stock updated.")
+    send_slack_buttons()
     return jsonify(herd_data)
 
 @app.route('/update_feed', methods=['POST'])
@@ -39,8 +40,9 @@ def update_feed():
     data = request.json
     new_feed_percentage = data.get['feed_percentage']
     update_feed_percentage(new_feed_percentage)
-    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}) #, broadcast=True)
+    socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
     send_slack_update(f"🐂 The herd's feed supply is now at {new_feed_percentage}%.")
+    send_slack_buttons()
     return jsonify({"status": "updated", "feed_percentage": new_feed_percentage})
 
 # Update water route (sync with Slack)
@@ -48,14 +50,16 @@ def update_feed():
 def water_herd():
     herd_data['water_percentage'] = max(0, herd_data['water_percentage'] - 10)
     send_slack_update("Water stock updated.")
+    send_slack_buttons()
     return jsonify(herd_data)
 
 # Move herd route (sync with Slack)
 @app.route('/move', methods=['POST'])
 def move_herd():
-    new_location = random.choice(["Pasture A", "Pasture B", "Corral"])
+    new_location = random.choice(["Main Barn", "North Pasture", "South Pasture", "Corral"])
     herd_data['location'] = new_location
     send_slack_update(f"Herd moved to {new_location}.")
+    send_slack_buttons()
     return jsonify(herd_data)
 
 # Request vet route (sync with Slack)
@@ -63,6 +67,7 @@ def move_herd():
 def request_vet():
     herd_data['health_status'] = "Needs attention"
     send_slack_update("Vet requested for herd health.")
+    send_slack_buttons()
     return jsonify(herd_data)
 
 @app.route('/send_slack_buttons', methods=['POST'])

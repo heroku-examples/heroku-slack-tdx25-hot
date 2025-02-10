@@ -125,7 +125,7 @@ def handle_move_herd(ack, body, logger):
     ack()
 
     # Update herd data (location)
-    new_location = random.choice(["Main Barn", "North Pasture", "South Pasture"])
+    new_location = random.choice(["Main Barn", "North Pasture", "South Pasture", "Corral"])
     herd_data['location'] = new_location
 
     # Send a message to Slack and sync data
