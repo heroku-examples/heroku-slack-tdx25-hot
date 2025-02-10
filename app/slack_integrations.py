@@ -18,6 +18,7 @@ def init_slack():
     This function will be called after the app is initialized.
     """
     slack_app.logger.setLevel("INFO")
+    send_slack_update("")
 
 
 # Send Slack update message with buttons
