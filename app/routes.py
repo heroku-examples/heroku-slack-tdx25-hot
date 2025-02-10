@@ -6,7 +6,7 @@ from flask import render_template, jsonify, request
 from slack_bolt.adapter.flask import SlackRequestHandler
 
 from app import app, slack_app, socketio
-from app.slack_integrations import send_slack_update, handle_slack_interaction
+from app.slack_integrations import send_slack_update, handle_slack_interaction, trigger_feed_reorder
 from .utils import herd_data, update_feed_percentage
 
 @app.route('/')
@@ -31,6 +31,8 @@ def update_feed():
     data = request.json
     new_feed_percentage = data.get['feed_percentage']
     update_feed_percentage(new_feed_percentage)
+    if new_feed_percentage < 25:
+        trigger_feed_reorder()
     socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}, broadcast=True)
     send_slack_update(f"🐂 The herd's feed supply is now at {new_feed_percentage}%.")
     send_slack_buttons()

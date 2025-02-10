@@ -173,7 +173,7 @@ def handle_slack_interaction(payload):
     if action == "feed_herd":
         new_feed_percentage = get_current_feed_percentage() - 10
         update_feed_percentage(new_feed_percentage)
-        if new_feed_percentage < 20:
+        if new_feed_percentage < 25:
             trigger_feed_reorder()
         socketio.emit("update_feed", {"feed_percentage": new_feed_percentage}) #, broadcast=True)
         response_text = f"The herd has been fed! 🐂 The feed level is now at {new_feed_percentage}"
