@@ -42,3 +42,10 @@ def get_current_health_status():
     Returns the current herd health status
     """
     return herd_data['health_status']
+
+def get_herd_data():
+    """
+    Returns the current status of the herd
+    """
+    return herd_data
+
