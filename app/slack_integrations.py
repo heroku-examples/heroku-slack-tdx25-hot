@@ -100,6 +100,9 @@ def handle_feed_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
+    from routes import send_slack_buttons
+    send_slack_buttons()
+
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -116,6 +119,8 @@ def handle_water_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
+    from routes import send_slack_buttons
+    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -133,6 +138,8 @@ def handle_move_herd(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
+    from routes import send_slack_buttons
+    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
@@ -149,6 +156,8 @@ def handle_request_vet(ack, body, logger):
 
     # Emit the data change to the web page
     from app import socketio
+    from routes import send_slack_buttons
+    send_slack_buttons()
     socketio.emit('update_herd_data', herd_data)
 
 
