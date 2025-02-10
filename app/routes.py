@@ -1,15 +1,14 @@
-from flask import render_template, jsonify, request
-from flask_socketio import emit
-from app import app, slack_app, socketio
-from app.slack_integrations import send_slack_update, handle_slack_interaction
-from slack_bolt.adapter.flask import SlackRequestHandler
-from .utils import herd_data, update_feed_percentage, get_current_feed_percentage
-
 import json
 import logging
 import random
 
-from app.slack_integrations import handler
+from flask import render_template, jsonify, request
+from slack_bolt.adapter.flask import SlackRequestHandler
+
+from app import app, slack_app, socketio
+from app.slack_integrations import send_slack_update, handle_slack_interaction
+from .utils import herd_data, update_feed_percentage
+
 
 # # In-memory data for demo purposes
 # herd_data = {
@@ -140,9 +139,12 @@ def slack_actions():
         logging.error(f"Error handling Slack action: {str(e)}")
         return jsonify({"error": "Failed to process action"}), 500
 
-
 # Slack update function
 def send_slack_update(message):
+    """
+    Sends the message to the Slack channel.
+    :param message:
+    """
     slack_app.client.chat_postMessage(
         channel='#trail-boss',
         text=message

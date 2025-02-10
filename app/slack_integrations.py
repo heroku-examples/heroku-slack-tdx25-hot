@@ -1,12 +1,12 @@
 import os
+import random
 
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
-from flask import request, jsonify
+from slack_sdk.errors import SlackApiError
+
 # from app import app, socketio
 from .utils import herd_data, get_current_feed_percentage, update_feed_percentage
-from slack_sdk.errors import SlackApiError
-import random
 
 # Initialize Slack app and request handler
 slack_app = App(token=os.environ['SLACK_BOT_TOKEN'], signing_secret=os.environ['SLACK_SIGNING_SECRET'])  # Replace with your actual bot token
@@ -17,7 +17,6 @@ def init_slack():
     Initialize the Slack integration with the Flask app context.
     This function will be called after the app is initialized.
     """
-    from app import app
     slack_app.logger.setLevel("INFO")
 
 
@@ -26,7 +25,6 @@ def send_slack_update(message):
     """
     Send a Slack message with buttons to the #trail-boss channel.
     """
-    from app import app
     try:
         slack_app.client.chat_postMessage(
             channel='#trail-boss',  # Replace with your channel name
@@ -61,11 +59,28 @@ def send_slack_update(message):
                                 "value": "water_herd"
                             },
                             {
-                                "type": "button",
-                                "text": {
+                                "type": "static_select",
+                                "placeholder": {
                                     "type": "plain_text",
-                                    "text": "Move Herd"
+                                    "text": "Select Herd Location"
                                 },
+                                "options": [
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "Main Barn"
+                                    },
+                                    "value": "main_barn"},
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "North Pasture"
+                                    },
+                                        "value": "north_pasture"},
+                                    {"text": {
+                                        "type": "plain_text",
+                                        "text": "South Pasture"
+                                    },
+                                        "value": "south_pasture"},
+                                ],
                                 "action_id": "move_herd",
                                 "value": "move_herd"
                             },
@@ -126,7 +141,7 @@ def handle_move_herd(ack, body, logger):
     ack()
 
     # Update herd data (location)
-    new_location = random.choice(["Pasture A", "Pasture B", "Corral"])
+    new_location = random.choice(["Main Barn", "North Pasture", "South Pasture"])
     herd_data['location'] = new_location
 
     # Send a message to Slack and sync data
