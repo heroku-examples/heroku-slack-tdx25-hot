@@ -1,8 +1,10 @@
 body {
-    font-family: 'Western', sans-serif;
+    font-family: 'Rye', serif;
     background-color: #f4f1e1;
     color: #8B4500;
     text-align: center;
+    font-weight: 400;
+    font-style: normal;
 }
 
 h1 {
