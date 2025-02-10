@@ -75,7 +75,13 @@ def send_slack_buttons():
     try:
         slack_app.client.chat_postMessage(
             channel='#trail-boss',
-            text="Trail Boss, what action would you like to take?",
+            text="Trail Boss, what action would you like to take?/n"
+                 "Current Status:/n"
+                 "Feed Supply: " + herd_data['feed_percentage'] + "%/n"
+                 "Water Supply: " + herd_data['water_percentage'] + "%/n"
+                 "Health Status: " + herd_data['health_status'] + "/n"
+                 "Herd Location: " + herd_data['location'] + "/n",
+
             attachments=[
                 {
                     "text": "Choose an action",
