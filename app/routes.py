@@ -19,8 +19,9 @@ def index():
 @app.route('/feed', methods=['POST'])
 def feed_herd():
     herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
-    send_slack_update("Feed stock updated.")
+    update_feed_percentage(herd_data['feed_percentage'])
     update_feed()
+    send_slack_update("Feed stock updated.")
     send_slack_buttons()
     return jsonify(herd_data)
 
