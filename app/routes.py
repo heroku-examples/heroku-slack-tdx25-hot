@@ -18,8 +18,8 @@ def index():
 # Update feed route (sync with Slack)
 @app.route('/feed', methods=['POST'])
 def feed_herd():
-    herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
-    update_feed_percentage(herd_data['feed_percentage'])
+    new_feed_percentage = max(0, herd_data['feed_percentage'] - 10)
+    update_feed_percentage(new_feed_percentage)
     update_feed()
     send_slack_update("Feed stock updated.")
     send_slack_buttons()
