@@ -20,7 +20,8 @@ def index():
 def feed_herd():
     new_feed_percentage = max(0, herd_data['feed_percentage'] - 10)
     update_feed_percentage(new_feed_percentage)
-    update_feed()
+    if new_feed_percentage < 25:
+        trigger_feed_reorder()
     send_slack_update("Feed stock updated.")
     send_slack_buttons()
     return jsonify(herd_data)
