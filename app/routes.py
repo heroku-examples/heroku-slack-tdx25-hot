@@ -20,6 +20,7 @@ def index():
 def feed_herd():
     herd_data['feed_percentage'] = max(0, herd_data['feed_percentage'] - 10)
     send_slack_update("Feed stock updated.")
+    update_feed()
     send_slack_buttons()
     return jsonify(herd_data)
 
